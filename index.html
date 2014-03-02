@@ -1,0 +1,113 @@
+<head>
+  <title>Recurso</title>
+</head>
+
+<body>
+  <h1>RECURSO</h1>
+  <h2>The board game for masochists</h2>
+  <p>The rules are simple: Players start with their pieces on a single, straight board of length n, and take turns rolling a dice and moving forward by that number of steps. The first to reach or pass the last square wins.</p>
+  <p>However, every second square on the board is a Challenge Square. If the player wins the challenge, they get to roll again.</p>
+  <h3>The challenge is another game of Recurso, n-1 squares long.</h3>
+  <p>Boards less than or equal to 2 squares are ignored.</p>
+  <p>Note that this game has a worst case runtime of O((n*m)!), and thus may occasionally play until the final heat death of the universe.</p>
+  <p>Please disable pop-up blocking in your browser settings.<p>
+  <div>Amount of tiles</div>
+  <button id="inc" onclick="inc()">+</button>
+  <button id="dec" onclick="dec()">-</button>
+  <input id="tiles" value="12"></input>
+  <div>Player #1 Name</div>
+  <input id="p1Active" type="checkbox" checked="checked"></input>
+  <input id="p1Name" value="Ben"</input>
+  <div>Player #2 Name</div>
+  <input id="p2Active" type="checkbox" checked="checked"></input>
+  <input id="p2Name" value="Eva"></input>
+  <div>Player #3 Name</div>
+  <input id="p3Active" type="checkbox"></input>
+  <input id="p3Name" value="Louis"></input>
+  <div>Player #4 Name</div>
+  <input id="p4Active" type="checkbox"></input>
+  <input id="p4Name" value="Alyssa"></input>
+  <p \>
+  <button onclick="playRecurso()">Recurso!</button>
+  <script>
+    function inc(){
+      var x = parseInt(document.getElementById("tiles").value);
+      document.getElementById("tiles").value = x+1;
+    }
+    function dec(){
+      var x = parseInt(document.getElementById("tiles").value);
+      document.getElementById("tiles").value = x-1;
+    }
+    
+    var globals = {
+      instances: 1,
+      totalInstances: 0,
+      instanceHistory: [],
+      addInstances: function(i){
+        globals.instances += i;
+        globals.instanceHistory.push(globals.instances);
+      },
+      incrementTotalInstances: function(){
+        globals.totalInstances++;
+      },
+      playerNames: []
+    }
+  
+  var gameEndCallback = function(results){
+    console.log(results.winnerName + " won the game!");
+  };
+  
+  var gameWindow;
+  var isPlayingRecurso = false;
+
+  function playRecurso(){
+    // You poor soul...
+    
+    var tiles = parseInt(document.getElementById("tiles").value);
+    if (isNaN(tiles)){
+      console.error("tiles is not a number!");
+      return;
+    }
+    if (tiles <= 3){
+      console.error("You need to have more than 3 squares! currently: "+tiles);
+      return;
+    }
+    var p1Active = document.getElementById("p1Active").checked,
+        p2Active = document.getElementById("p2Active").checked,
+        p3Active = document.getElementById("p3Active").checked,
+        p4Active = document.getElementById("p4Active").checked;
+    
+    if (!p1Active && !p2Active && !p3Active && !p4Active){
+      console.error("At least one player needs to be active!");
+      return;
+    }
+    
+    if (!isPlayingRecurso){
+      isPlayingRecurso = true;
+    }
+
+    var p1Name = document.getElementById("p1Name").value,
+        p2Name = document.getElementById("p2Name").value,
+        p3Name = document.getElementById("p3Name").value,
+        p4Name = document.getElementById("p4Name").value;
+
+    globals.playerNames = [];
+    if (p1Active)
+      globals.playerNames.push(p1Name);
+    if (p2Active)
+      globals.playerNames.push(p2Name);
+    if (p3Active)
+      globals.playerNames.push(p3Name);
+    if (p4Active)
+      globals.playerNames.push(p4Name);
+
+    gameWindow = window.open("recurso/index.html", "Recurso", "width=300, height=400");
+    gameWindow.window.globals = globals;
+    gameWindow.window.parentCallback = gameEndCallback;
+    gameWindow.onload = function(){
+      gameWindow.window.document.title = "Recurso #1";
+      gameWindow.init(tiles);
+    };
+  }
+  </script>
+</body>
