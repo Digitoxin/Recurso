@@ -3,6 +3,7 @@
 </head>
 
 <body>
+  <div id="results"></div>
   <h1>RECURSO</h1>
   <h2>The board game for masochists</h2>
   <p>The rules are simple: Players start with their pieces on a single, straight board of length n, and take turns rolling a dice and moving forward by that number of steps. The first to reach or pass the last square wins.</p>
@@ -50,11 +51,23 @@
       incrementTotalInstances: function(){
         globals.totalInstances++;
       },
-      playerNames: []
+      playerNames: [],
+      totalMoves: 0,
+      incrementMoves: function(){
+        globals.totalMoves++;
+      }
     }
   
   var gameEndCallback = function(results){
-    console.log(results.winnerName + " won the game!");
+    var res = document.getElementById("results");
+    res.innerHTML = "";
+    var a = document.createElement("p");
+    a.textContent = results.winnerName + " won the game!";
+    res.appendChild(a);
+
+    var b = document.createElement("p");
+    b.textContent = "...And it only took " + globals.totalInstances + " windows and " + globals.totalMoves + " moves!";
+    res.appendChild(b);
   };
   
   var gameWindow;

@@ -63,6 +63,7 @@ Recurso.prototype = {
             // recurso game in progress: do not play turn
             return;
         }
+        globals.incrementMoves();
 
         var p = this.players[this.currentTurn];
         var roll = diceRoll();
